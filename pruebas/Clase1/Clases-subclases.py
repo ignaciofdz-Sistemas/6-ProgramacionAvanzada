@@ -19,7 +19,7 @@ servidor1 = Servidor("web01", 4, 16)
 print(servidor1.mostrar())
 servidor1.set_ram(32)
 print(servidor1.get_ram())
-servidor1.set_ram(-20)
+servidor1.set_ram(-20) #un error contolado con salida definida
 print(servidor1.get_ram())
     
 #servidor1 = Servidor("web01", 4, 16)
