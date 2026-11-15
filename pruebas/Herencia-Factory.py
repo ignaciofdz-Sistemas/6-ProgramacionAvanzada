@@ -1,0 +1,66 @@
+#Manejo de clases, atributos y métodos en Python
+
+from abc import ABC, abstractmethod
+
+class Dispositivored(ABC):
+    @abstractmethod
+    def hacer_backup(self) -> str:
+        pass
+    
+    def __init__(self, marca: str, ip: str, modelo: str):
+        self.marca = marca
+        self.ip = ip
+        self.modelo = modelo
+   
+    def resumen(self) -> str:
+        return f"Dispositivo {self.marca} - ({self.modelo}) - IP {self.ip}"
+    
+               
+class Switch(Dispositivored):
+    def __init__(self, marca: str, ip: str, modelo: str):
+        super().__init__(marca=marca, modelo=modelo, ip=ip)
+        self.vlan=[]
+        
+    def añadir_vlan(self, vlan: str) -> None:
+            self.vlan.append(vlan)
+            
+    def hacer_backup(self):
+        return ("backup de switch completado")
+            
+    def resumen(self) -> str:
+        return super().resumen() + f" - VLAN {self.vlan}" + f" {self.hacer_backup()}"
+        
+class Firewall(Dispositivored):
+    def __init__(self, marca: str, ip: str, modelo: str):
+        super().__init__(marca=marca, modelo=modelo, ip=ip)
+        self.politica=[]  
+    def añadir_politica(self, politica: str) -> None:
+        self.politica.append(politica)
+        
+    def hacer_backup(self):
+            return ("backup de Firewall completado")
+        
+    def resumen(self) -> str:
+        return super().resumen() + f" - POLITICA {self.politica}" + f" {self.hacer_backup()}"
+    
+#fw = FirewallFortigate("fw-madrid", "10.0.0.1", "FG-100F")
+
+  
+
+inventario = [
+    {"tipo": "switch",   "marca": "Cisco", "ip": "10.10.0.2",   "modelo": "F480"},
+    {"tipo": "firewall", "marca": "Forti", "ip": "172.20.10.1", "modelo": "FW-60G"},
+]
+
+def crear_dispositivo(datos: dict) -> Dispositivored:
+    if datos["tipo"] == "switch":
+        return Switch(datos["marca"],datos["ip"],datos["modelo"])
+    elif datos["tipo"]== "firewall":
+        return Firewall(datos["marca"],datos["ip"],datos["modelo"])
+    else:
+        raise ValueError(f"Tipo desconocido: {datos['tipo']}")       
+        
+for fila in inventario:
+    d = crear_dispositivo(fila)
+    print(d.resumen())
+        
